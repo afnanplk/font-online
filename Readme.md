@@ -1,4 +1,4 @@
-- Input Text: Users enter Malayalam text FML (get FML from https://kuttipencil.in/)in the input field. This text serves as the content that will be displayed in the generated image.
+- Input Text: Users enter Malayalam text FML (get FML from https://kuttipencil.in/ )in the input field. This text serves as the content that will be displayed in the generated image.
 
 - Font Selection: Users can choose the font for the text from a dropdown list. They have the option to select from different fonts, including custom fonts that can be uploaded or predefined fonts like "ML_TT_Onam_Bold" or "FML-TT-Beckal_Bold."
 
