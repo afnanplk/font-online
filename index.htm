@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PLK</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        #header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 100px);
+        }
+
+        #textContainer {
+            text-align: center;
+        }
+
+        #result {
+            font-size: 24px;
+            color: #000;
+            padding-bottom: 20px; /* Add padding at the bottom to prevent cropping */
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        select, input[type="number"], input[type="color"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        input[type="number"] {
+            /* Color scrollbar (slider) */
+            appearance: none;
+            height: 10px;
+            background: linear-gradient(to right, red, yellow, green, cyan, blue, violet);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="number"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        /* Load custom fonts dynamically */
+        @font-face {
+            font-family: 'CustomFont';
+            src: local('CustomFont');
+        }
+
+        @font-face {
+            font-family: 'ML_TT_Onam_Bold';
+            src: local('ML_TT_Onam_Bold'), url('ML_TT_Onam_Bold.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'ML_TT_Chithira_HeavyBold';
+            src: local('ML_TT_Chithira_HeavyBold'), url('ML_TT_Chithira_HeavyBold.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'FML-TT-Beckal_Bold';
+            src: local('FML-TT-Beckal_Bold'), url('FML-TT-Beckal_Bold.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'FML-TT-Kala_Bold_Italic';
+            src: local('FML-TT-Kala_Bold_Italic'), url('FML-TT-Kala_Bold_Italic.ttf') format('truetype');
+        }
+        #customFontStyle {
+            display: none;
+        }
+
+        h4 {
+            text-align: left; 
+            margin: 10px 0; 
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>Add font to malayalam fml</h1>
+    </div>
+
+    <div id="container">
+        <div id="textContainer">
+            <div id="result">മലയാളം</div>
+            <input type="text" id="malayalamText" name="malayalamText" placeholder="Enter Malayalam Text">
+            <h4>Choose font:</h4>
+            <select id="fontSelector" name="fontSelector">
+                <option value="'CustomFont', sans-serif">Uploaded Font</option>
+                <option value="'ML_TT_Onam_Bold', sans-serif">ML_TT_Onam_Bold</option>
+                <option value="'ML_TT_Chithira_HeavyBold', sans-serif">ML_TT_Chithira_HeavyBold</option>
+                <option value="FML-TT-Beckal_Bold, sans-serif">FML-TT-Beckal_Bold</option>
+                <option value="FML-TT-Kala_Bold_Italic, serif">FML-TT-Kala_Bold_Italic</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+            </select>
+            <h4>Choose size:</h4>
+            <input type="number" id="fontSizeNumber" name="fontSizeNumber" min="40" max="99" step="1" value="40">
+            <h4>Choose color:</h4>
+            <input type="color" id="colorPicker" name="colorPicker" value="#000000">
+            <input type="file" id="fontUpload" name="fontUpload">
+            <button type="button" id="generateButton">Generate Text Image</button>
+            <a id="downloadLink" style="display: none" download="malayalam_text.png">Download Image</a>
+        </div>
+    </div>
+
+    <script>
+        const malayalamText = document.getElementById('malayalamText');
+        const result = document.getElementById('result');
+        const fontSelector = document.getElementById('fontSelector');
+        const fontSizeNumber = document.getElementById('fontSizeNumber'); // Custom size input
+        const colorPicker = document.getElementById('colorPicker');
+        const downloadLink = document.getElementById('downloadLink');
+        const customFontStyle = document.getElementById('customFontStyle');
+        const fontUpload = document.getElementById('fontUpload');
+
+        // Function to update the font size based on the custom input
+        function updateFontSize() {
+            const newSize = fontSizeNumber.value + 'px';
+            result.style.fontSize = newSize;
+        }
+
+        // Event listeners for custom input change
+        fontSizeNumber.addEventListener('input', updateFontSize);
+
+        fontUpload.addEventListener('change', function () {
+            const file = fontUpload.files[0];
+            loadCustomFont(file);
+        });
+
+        document.getElementById('generateButton').addEventListener('click', function () {
+            result.textContent = malayalamText.value;
+            result.style.fontFamily = fontSelector.value;
+            result.style.color = colorPicker.value;
+
+            // Create a canvas element and draw the text on it
+            const canvas = document.createElement('canvas');
+            const canvasContext = canvas.getContext('2d');
+
+            // Set the canvas dimensions based on the text size
+            canvas.width = result.offsetWidth;
+            canvas.height = result.offsetHeight + 20; // Adjusted to account for padding
+
+            // Clear the canvas
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the text on the canvas
+            canvasContext.font = getComputedStyle(result).font;
+            canvasContext.fillStyle = getComputedStyle(result).color;
+            canvasContext.fillText(result.textContent, 0, result.offsetHeight);
+
+            // Convert the canvas to a data URL and set it as the href of the download link
+            const dataUrl = canvas.toDataURL('image/png');
+            downloadLink.href = dataUrl;
+            downloadLink.style.display = 'block';
+        });
+
+        // Function to load custom font from a file input
+        function loadCustomFont(fontFile) {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const fontData = event.target.result;
+
+                const customFont = new FontFace('CustomFont', fontData);
+                customFont.load().then(function (loadedFont) {
+                    document.fonts.add(loadedFont);
+                    customFontStyle.innerHTML = `
+                        @font-face {
+                            font-family: 'CustomFont';
+                            src: local('CustomFont');
+                        }
+                    `;
+                    fontSelector.value = "'CustomFont', sans-serif";
+                }).catch(function (error) {
+                    console.error('Error loading custom font:', error);
+                });
+            };
+
+            reader.readAsArrayBuffer(fontFile);
+        }
+    </script>
+</body>
+</html>
