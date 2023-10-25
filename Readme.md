@@ -1,6 +1,6 @@
 - Input Text: Users enter Malayalam text FML (get FML from https://kuttipencil.in/ )in the input field. This text serves as the content that will be displayed in the generated image.
 
-- Font Selection: Users can choose the font for the text from a dropdown list. They have the option to select from different fonts, including custom fonts that can be uploaded or predefined fonts like "ML_TT_Onam_Bold" or "FML-TT-Beckal_Bold."
+- Font Selection: Users can choose the font for the text from a dropdown list or upload their own .ttf (font file - get .ttf file from https://www.malayalamfont.com/ ). They have the option to select from different fonts, including custom fonts that can be uploaded or predefined fonts like "ML_TT_Onam_Bold" or "FML-TT-Beckal_Bold."
 
 - Font Size and Color: Users can specify the font size (ranging from 40px to 99px) and choose a color for the text using a color picker.
 
